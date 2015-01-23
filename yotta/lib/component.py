@@ -527,6 +527,21 @@ class Component(pack.Pack):
         else:
             return []
 
+    def getCompileFlags(self, lang):
+        ''' Some modules (e.g. the objective-c runtime)  must specify flags for
+            all code that depends on them. Use of this should be avoided where
+            at all possible, but in certain circumstances is necessary. the
+            compileFlags property in module.json allows these flags to be
+            specified.
+
+            USE OF THIS PROPERTY LIMITS A MODULE TO WORKING WITH A SINGLE
+            TOOLCHAIN (compiler)
+        '''
+        if 'compileFlags' in self.description and lang in self.description['compileFlags']:
+            return self.description['compileFlags'][lang]
+        else:
+            return []
+
     def getRegistryNamespace(self):
         return Registry_Namespace
 

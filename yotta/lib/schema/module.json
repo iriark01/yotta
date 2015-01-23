@@ -97,8 +97,15 @@
                 }
             },
             "additionalProperties": false
+        },
+        "compileFlags": {
+            "type": "object",
+            "properties": {
+                "c": {"$ref": "#/definitions/flagArray"},
+                "cpp": {"$ref": "#/definitions/flagArray"},
+                "objc": {"$ref": "#/definitions/flagArray"}
+            }
         }
-
     },
     "definitions": {
         "name": {
@@ -250,6 +257,14 @@
             "comment": "!!! TODO: pattern",
                "type": "string",
             "pattern": ".*"
+        },
+        "flagArray":{
+            "type": "array",
+            "items": {
+                "type": "string",
+                "maxLength": 1000
+            },
+            "maxItems":200
         }
     },
     "required": ["name", "version"],

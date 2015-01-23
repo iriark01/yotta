@@ -58,6 +58,16 @@ project({{ component_name }})
 {{ include_other_dirs }}
 {% endif %}
 
+# Add the hierarchy-dependent compilation flags specified by the compileFlags
+# module.json property. The use of these is **strongly discouraged**, but they
+# are sometimes necessary.
+set(_SAVED_CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+set(_SAVED_CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS}")
+set(_SAVED_CMAKE_OBJC_FLAGS "${CMAKE_OBJC_FLAGS}")
+set(CMAKE_C_FLAGS "${_SAVED_CMAKE_C_FLAGS} {{ set_c_flags }}")
+set(CMAKE_CPP_FLAGS "${_SAVED_CMAKE_CPP_FLAGS} {{ set_cpp_flags }}")
+set(CMAKE_OBJC_FLAGS "${_SAVED_CMAKE_OBJC_FLAGS} {{ set_objc_flags }}")
+
 # Build targets may define additional preprocessor definitions for all
 # components to use (such as chip variant information)
 add_definitions({{ yotta_target_definitions }})
@@ -76,6 +86,11 @@ add_subdirectory(
     "{{ workingdir | replaceBackslashes }}"
 )
 {% endfor %}
+
+# restore hierarchy-dependent compilation flags to previous values
+set(CMAKE_C_FLAGS "${_SAVED_CMAKE_C_FLAGS}")
+set(CMAKE_CPP_FLAGS "${_SAVED_CMAKE_CPP_FLAGS}")
+set(CMAKE_OBJC_FLAGS "${_SAVED_CMAKE_OBJC_FLAGS}")
 
 '''
 
@@ -385,6 +400,17 @@ class CMakeGen(object):
             for d in dep_extra_include_dirs:
                 include_other_dirs += 'include_directories("%s")\n' % replaceBackslashes(os.path.join(c.path, d))
 
+        # collect additional compilation flags that need setting because they
+        # are required by this module, or one of its direct or indirect
+        # dependencies:
+        c_flags = []
+        cpp_flags = []
+        objc_flags = []
+        for name, c in list(all_dependencies.items()) + [(component.getName(), component)]:
+            c_flags    += c.getCompileFlags('c')
+            cpp_flags  += c.getCompileFlags('cpp')
+            objc_flags += c.getCompileFlags('objc')
+
         add_depend_subdirs = ''
         for name, c in active_dependencies.items():
             depend_subdir = replaceBackslashes(os.path.join(modbuilddir, name))
@@ -458,7 +484,10 @@ class CMakeGen(object):
                   "add_depend_subdirs": add_depend_subdirs,
                      "add_own_subdirs": add_own_subdirs,
             "yotta_target_definitions": target_definitions,
-                   "component_version": component.getVersion()
+                   "component_version": component.getVersion(),
+                         "set_c_flags": ' '.join(c_flags),
+                       "set_cpp_flags": ' '.join(cpp_flags),
+                      "set_objc_flags": ' '.join(objc_flags)
         })
         self._writeFile(os.path.join(builddir, 'CMakeLists.txt'), file_contents)
 
