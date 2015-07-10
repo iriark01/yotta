@@ -4,12 +4,12 @@
 
 yotta is a tool that we're building at [mbed](https://mbed.org), to make it
 easier to build better software written in C, C++ or other C-family languages.
-It's still early in development, so if you have questions/feedback or issues,
+It's still early in development, so if you have questions, feedback or issues,
 please [report them](https://github.com/ARMmbed/yotta/issues).
 
 ### Installation
 yotta is written in
-[python](https://www.python.org/downloads/release/python-279/), and is
+[Python](https://www.python.org/downloads/release/python-279/), and is
 installed using [pip](http://pip.readthedocs.org/en/latest/installing.html).
 Install yotta itself by running:
 
@@ -17,7 +17,7 @@ Install yotta itself by running:
 pip install yotta
 ```
 
-**Note that yotta needs several non-python dependencies to be installed
+**Note that yotta needs several non-Python dependencies to be installed
 correctly in order to do anything useful.** Please follow the **[detailed
 installation instructions](http://docs.yottabuild.org/#installing)** on the
 yotta docs website to ensure you have a working installation.
@@ -32,10 +32,10 @@ documentation.
 The best way to get started is to [follow the
 tutorial](http://docs.yottabuild.org/tutorial/tutorial.html).
 
-### What `yotta` does
+### What `yotta` Does
 yotta downloads the software components that your program depends on. It's
-similar in concept to npm, pip or gem: although because C and C++ are compiled
-languages, yotta also controls the build of your software in order to ensure
+similar in concept to npm, pip or gem, although because C and C++ are compiled
+languages, yotta also controls the build of your software in order to ensure that
 downloaded modules are available to use in your code.
 
 To install a new module, you run `yotta install --save <modulename>`, and yotta
@@ -43,18 +43,15 @@ will install both the module you've specified and any of its dependencies that
 you don't already have installed. It will also update your module's description
 file to reflect the new dependency.
 
-The best way to really understand how yotta works is to [follow the
-tutorial](http://docs.yottabuild.org/tutorial/tutorial.html).
-
 ### Further Documentation
 For further documentation see the [yotta docs](http://docs.yottabuild.org)
 website.
 
 ### Tips
  * `yt` is a shorthand for the `yotta` command, and it's much quicker to type!
- * yotta is strongly influenced by [npm](http://npmjs.org), the awesome node.js
+ * yotta is strongly influenced by [npm](http://npmjs.org), the awesome Node.js
    software packaging system. Much of the syntax for module description and
    commands is very similar.
 
-### License
+### Licence
 yotta is licensed under Apache-2.0
